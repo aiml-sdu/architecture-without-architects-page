@@ -106,7 +106,7 @@ h3:first-child{margin-top:0}
 .gone{font:400 12px/1.5 var(--sans);color:var(--muted);margin-top:10px;min-height:1.5em}
 .gone s{margin-right:8px}
 .dimr{margin-top:14px;font:400 11px/1 var(--mono);color:var(--ink2)}
-.dimr .bar{height:10px;position:relative;margin:7px 0 6px}
+.dimr .bar{display:block;height:10px;position:relative;margin:7px 0 6px}
 .dimr .bar i{position:absolute;left:0;top:4px;height:2px;background:var(--line)}
 .dimr .bar i::before,.dimr .bar i::after{content:"";position:absolute;top:-4px;height:10px;border-left:1.5px solid var(--line)}
 .dimr .bar i::before{left:0}.dimr .bar i::after{right:0}
@@ -231,6 +231,9 @@ footer div{margin-bottom:6px}
 }
 @media (max-width:820px){
   .trip{grid-template-columns:1fr}
+  .cover{display:flex;flex-direction:column}
+  .cover .coverfoot{order:1;border-top:0;border-bottom:1.5px solid var(--line)}
+  .cover .trip{order:2}
   .vcol{border-right:0;border-bottom:1.5px solid var(--line)}
   .vcol:last-child{border-bottom:0}
   .pq,.xtra{min-height:0}
