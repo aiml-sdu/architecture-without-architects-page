@@ -1,0 +1,724 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Architecture Without Architects</title>
+<meta name="description" content="Project page for Architecture Without Architects: How AI Coding Agents Shape Software Architecture (SAGAI Workshop, IEEE ICSA 2026).">
+<script>(function(){try{var s=localStorage.getItem('page-theme');if(s==='light'||s==='dark')document.documentElement.setAttribute('data-theme',s);}catch(e){}})();</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Martian+Mono:wght@400;500&family=Spectral:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#ffffff; --paper:#f4f7f9; --sheet:#eef3f6; --ink:#1f262b; --ink2:#46525a; --muted:#6b7780;
+  --rule:#d5dde2; --grid:rgba(14,98,140,.09); --grid2:rgba(14,98,140,.16);
+  --cyan:#0d5f8a; --cyanSoft:rgba(13,95,138,.08); --red:#c4352b; --redSoft:rgba(196,53,43,.08);
+  --line:#0d5f8a; --card:#ffffff; --focus:#c4352b;
+  --serif:'Spectral',Georgia,serif; --sans:'Archivo',system-ui,sans-serif; --mono:'Martian Mono',ui-monospace,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0b1620; --paper:#0f1e2a; --sheet:#112331; --ink:#e3eaef; --ink2:#b3c1ca; --muted:#8798a4;
+    --rule:#23384a; --grid:rgba(120,200,240,.07); --grid2:rgba(120,200,240,.14);
+    --cyan:#6fc3ea; --cyanSoft:rgba(111,195,234,.10); --red:#ff7a6b; --redSoft:rgba(255,122,107,.12);
+    --line:#6fc3ea; --card:#0f1e2a; --focus:#ff7a6b; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0b1620; --paper:#0f1e2a; --sheet:#112331; --ink:#e3eaef; --ink2:#b3c1ca; --muted:#8798a4;
+  --rule:#23384a; --grid:rgba(120,200,240,.07); --grid2:rgba(120,200,240,.14);
+  --cyan:#6fc3ea; --cyanSoft:rgba(111,195,234,.10); --red:#ff7a6b; --redSoft:rgba(255,122,107,.12);
+  --line:#6fc3ea; --card:#0f1e2a; --focus:#ff7a6b; color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 17px/1.62 var(--sans);transition:background .2s,color .2s}
+a{color:var(--cyan);text-underline-offset:3px}
+a:focus-visible,button:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+.mono{font-family:var(--mono)}
+
+/* header */
+header.top{padding:56px 0 28px}
+.kicker{font:500 11px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 18px}
+h1{font:500 clamp(34px,5.4vw,58px)/1.06 var(--serif);letter-spacing:-.01em;margin:0 0 12px;max-width:16ch}
+.sub{font:400 clamp(19px,2.3vw,24px)/1.35 var(--serif);font-style:italic;color:var(--ink2);margin:0 0 22px;max-width:40ch}
+.standfirst{font-size:19px;line-height:1.55;max-width:62ch;margin:0 0 22px}
+.byline{font-size:15px;color:var(--ink2);margin:0 0 4px}
+.byline b{font-weight:600;color:var(--ink)}
+.meta{font-size:14px;color:var(--muted);margin:0 0 18px}
+.links{font-size:15px;margin:0}
+.links a{text-decoration:none;border-bottom:1px solid var(--rule)}
+.links a:hover{border-color:var(--cyan)}
+.links .sep{color:var(--muted);margin:0 7px}
+
+/* theme toggle */
+#themeTg{position:fixed;right:16px;bottom:16px;z-index:40;display:flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid var(--rule);background:var(--bg);color:var(--ink);font:500 11px/1 var(--mono);letter-spacing:.04em;border-radius:3px;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.08)}
+#themeTg svg{width:14px;height:14px}
+
+/* hero: the drafting table */
+.dark-band{--hb:var(--paper);background:var(--hb);border-block:1px solid var(--rule);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px),linear-gradient(var(--grid2) 1px,transparent 1px),linear-gradient(90deg,var(--grid2) 1px,transparent 1px);
+  background-size:16px 16px,16px 16px,80px 80px,80px 80px}
+.hero{padding:28px 0 30px}
+.hero-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px 24px;margin-bottom:16px}
+.hero-title{font:500 12px/1.4 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--cyan)}
+.hero-hint{font:400 13px/1.4 var(--sans);color:var(--ink2)}
+.tabs{display:flex;gap:0;border:1px solid var(--line);width:max-content;max-width:100%;background:var(--bg)}
+.tabs button{font:500 12px/1 var(--mono);padding:10px 14px;border:0;border-right:1px solid var(--line);background:transparent;color:var(--cyan);cursor:pointer;min-height:40px}
+.tabs button:last-child{border-right:0}
+.tabs button[aria-pressed="true"]{background:var(--cyan);color:var(--bg)}
+.board{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr) minmax(0,.95fr);gap:22px;margin-top:16px}
+.panel{border:1px solid var(--line);background:color-mix(in srgb,var(--bg) 82%,transparent);padding:16px;position:relative}
+.panel .tag{position:absolute;top:-9px;left:12px;background:var(--hb);padding:0 6px;font:500 10px/18px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--cyan)}
+.prompt-q{font:400 16px/1.5 var(--serif);margin:6px 0 10px}
+.prompt-q mark{background:var(--redSoft);color:inherit;border-bottom:1.5px solid var(--red);padding:0 1px;cursor:help}
+.prompt-q mark.on{background:var(--red);color:var(--bg)}
+.extra{font:400 12.5px/1.5 var(--sans);color:var(--ink2);border-top:1px dashed var(--rule);padding-top:8px;margin-top:8px}
+.extra .h{font:500 10px/1.6 var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.stack{display:flex;flex-direction:column;align-items:stretch;gap:0;padding:6px 4px}
+.comp{position:relative;border:1.5px solid var(--line);padding:9px 12px;font:500 14px/1.25 var(--sans);background:var(--bg);display:flex;justify-content:space-between;align-items:center;gap:8px;transition:border-color .25s,background .25s,transform .25s,opacity .25s}
+.comp + .comp{margin-top:22px}
+.comp + .comp::before{content:"";position:absolute;left:50%;top:-22px;height:21px;border-left:1.5px solid var(--line)}
+.comp + .comp::after{content:"";position:absolute;left:calc(50% - 4px);top:-8px;border:4px solid transparent;border-top:6px solid var(--line)}
+.comp .st{font:500 9.5px/1 var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.comp.new{border-color:var(--red);background:var(--redSoft)}
+.comp.new .st{color:var(--red)}
+.comp.hl{outline:2px solid var(--red);outline-offset:2px}
+.comp.enter{opacity:0;transform:translateY(-6px)}
+.dropped{margin-top:14px;font:400 12.5px/1.5 var(--sans);color:var(--muted)}
+.dropped s{margin-right:8px}
+.tb{width:100%;border-collapse:collapse;font:400 12.5px/1.35 var(--mono)}
+.tb th,.tb td{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
+.tb th{font-weight:500;color:var(--muted);text-transform:uppercase;font-size:9.5px;letter-spacing:.06em;width:38%}
+.dims{margin-top:14px}
+.dim{display:grid;grid-template-columns:22px minmax(0,1fr) 64px;align-items:center;gap:8px;margin:6px 0;font:400 11.5px/1 var(--mono);color:var(--muted);cursor:pointer}
+.dim .bar{height:10px;position:relative}
+.dim .bar i{position:absolute;left:0;top:4px;height:2px;background:var(--line);transition:width .35s}
+.dim .bar i::before,.dim .bar i::after{content:"";position:absolute;top:-4px;height:10px;border-left:1.5px solid var(--line)}
+.dim .bar i::before{left:0}.dim .bar i::after{right:0}
+.dim.cur{color:var(--ink)}
+.dim.cur .bar i{background:var(--red)}
+.dim.cur .bar i::before,.dim.cur .bar i::after{border-color:var(--red)}
+.dimcap{font:400 10px/1.4 var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:10px}
+
+/* layout with rail */
+.layout{display:grid;grid-template-columns:200px minmax(0,1fr);gap:56px;margin-top:40px}
+.rail{position:sticky;top:24px;align-self:start;font:400 13px/1.4 var(--sans)}
+.rail .h{font:500 10px/1 var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:12px}
+.rail a{display:block;color:var(--ink2);text-decoration:none;padding:5px 0 5px 12px;border-left:1.5px solid var(--rule)}
+.rail a.on{color:var(--red);border-color:var(--red)}
+.topbar{display:none}
+main{min-width:0;max-width:760px}
+
+/* chapter cards */
+.cards{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin:34px 0 0}
+.card{display:block;border:1px solid var(--rule);text-decoration:none;color:var(--ink);padding:10px;background:var(--card);transition:border-color .2s}
+.card:hover{border-color:var(--cyan)}
+.card svg{display:block;width:100%;height:auto;margin-bottom:8px;border-bottom:1px dashed var(--rule)}
+.card .n{font:500 10px/1 var(--mono);color:var(--red);letter-spacing:.06em}
+.card .t{font:500 13.5px/1.3 var(--sans);margin-top:4px}
+
+/* text */
+section.blk{margin:0 0 54px;scroll-margin-top:72px}
+h2{font:500 clamp(25px,3.2vw,32px)/1.2 var(--serif);margin:0 0 14px;letter-spacing:-.005em}
+h3{font:600 15px/1.3 var(--sans);margin:22px 0 6px}
+.label{display:flex;align-items:center;gap:10px;font:500 11px/1 var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--cyan);margin:0 0 12px}
+.label::before{content:"";width:18px;height:10px;border:1.5px solid var(--cyan);border-right-color:var(--red)}
+p{margin:0 0 16px}
+.tldr{border:1.5px solid var(--line);padding:18px 20px 6px;background:var(--cyanSoft)}
+.tldr ul{margin:0 0 12px;padding-left:20px}
+.tldr li{margin:0 0 8px}
+.abstract p b{font-family:var(--mono);font-weight:500;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--red);margin-right:6px}
+.worst{border-left:3px solid var(--red);padding:2px 0 2px 16px}
+dl.defs{display:grid;grid-template-columns:44px minmax(0,1fr);gap:12px 14px;border:1px solid var(--rule);padding:18px;margin:0}
+dl.defs dt{grid-column:1;padding-top:3px}
+dl.defs dd{grid-column:2;margin:0;font-size:15.5px}
+dl.defs dd b{font-weight:600}
+dl.defs svg{width:40px;height:26px;display:block}
+.chapnum{font:500 11px/1 var(--mono);color:var(--red);letter-spacing:.08em;margin:0 0 8px;display:block}
+figure{margin:22px 0 8px}
+figcaption{font:400 14px/1.5 var(--sans);color:var(--ink2);margin-top:10px}
+figcaption b{font-family:var(--mono);font-weight:500;font-size:11px;letter-spacing:.06em;color:var(--cyan);text-transform:uppercase;margin-right:6px}
+.ex{border:1px solid var(--line);padding:16px;background:var(--paper);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:16px 16px}
+.seg{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.seg button,.chip{font:500 11.5px/1 var(--mono);padding:9px 11px;min-height:36px;border:1px solid var(--line);background:var(--bg);color:var(--cyan);cursor:pointer}
+.seg button[aria-pressed="true"],.chip[aria-pressed="true"]{background:var(--cyan);color:var(--bg)}
+.chip.red[aria-pressed="true"]{background:var(--red);border-color:var(--red)}
+
+/* ch1 bars */
+.measure{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.mcol .mh{font:500 10px/1 var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:8px}
+.mrow{display:grid;grid-template-columns:20px minmax(0,1fr) 44px;gap:8px;align-items:center;margin:6px 0;font:400 12px/1 var(--mono)}
+.mrow .b{height:16px;border:1.5px solid var(--line);background:var(--cyanSoft);transition:width .4s}
+.mrow.c .b{border-color:var(--red);background:var(--redSoft)}
+.note{font:400 13px/1.5 var(--sans);color:var(--ink2);margin-top:10px}
+
+/* ch2 rings */
+.surface{display:grid;grid-template-columns:minmax(0,240px) minmax(0,1fr);gap:20px;align-items:center}
+.surface svg{width:100%;height:auto}
+.ring{fill:none;stroke:var(--line);stroke-width:1.5;transition:stroke .3s,opacity .3s}
+.ring.off{opacity:.18;stroke-dasharray:3 4}
+.ring.cur{stroke:var(--red)}
+.rtext{font:500 10px var(--mono);fill:var(--ink2)}
+.yr{font:500 26px/1 var(--serif);color:var(--red)}
+.ydesc{font:400 15px/1.5 var(--sans);margin:6px 0 8px}
+.yconc{font:400 12px/1.6 var(--mono);color:var(--ink2)}
+input[type=range]{width:100%;accent-color:var(--red);margin:10px 0 4px}
+.mechs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin-top:16px}
+.mech{border:1px solid var(--line);padding:9px;background:var(--bg);font:400 12.5px/1.4 var(--sans)}
+.mech .k{font:500 10px/1 var(--mono);color:var(--red);display:block;margin-bottom:5px}
+.mech .t{font-weight:600;display:block;margin-bottom:3px}
+.props{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:8px 0 18px}
+.prop{border-top:2px solid var(--red);padding-top:8px;font-size:15px}
+.prop b{display:block;font:500 11px/1.4 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--red)}
+
+/* ch3 patterns */
+.pgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.pcat{font:500 10px/1 var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:6px}
+.pcard{display:block;width:100%;text-align:left;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);padding:10px;cursor:pointer;font:400 13px/1.35 var(--sans);margin-bottom:8px;transition:opacity .25s,border-color .2s}
+.pcard .id{font:500 11px/1 var(--mono);color:var(--cyan)}
+.pcard .nm{display:block;font-weight:600;margin:4px 0 2px}
+.pcard .ty{font:500 9.5px/1 var(--mono);text-transform:uppercase;letter-spacing:.06em}
+.pcard.fund{border-color:var(--red)}
+.pcard.fund .ty,.pcard.fund .id{color:var(--red)}
+.pcard.dim0{opacity:.28}
+.pcard[aria-pressed="true"]{box-shadow:inset 0 0 0 2px currentColor}
+.pdetail{margin-top:12px;border:1px solid var(--line);background:var(--bg);padding:14px}
+.chain{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:8px 0}
+.chain span{border:1.5px solid var(--line);padding:6px 9px;font:500 12.5px/1.2 var(--sans)}
+.chain span.trig{border-style:dashed;font-family:var(--mono);font-size:11.5px}
+.chain i{font-style:normal;color:var(--muted);font:400 13px var(--mono)}
+.pdetail .fund-c span:not(.trig){border-color:var(--red)}
+.pmeta{font:400 12.5px/1.5 var(--mono);color:var(--ink2)}
+
+/* ch4 composition */
+.pipe{display:flex;align-items:stretch;gap:0;overflow-x:auto;padding:6px 2px 10px}
+.pnode{flex:0 0 auto;display:flex;flex-direction:column;gap:6px;min-width:118px}
+.pnode .ph{font:500 10px/1.3 var(--mono);color:var(--cyan);text-transform:uppercase;letter-spacing:.04em;min-height:26px}
+.pnode .bx{border:1.5px solid var(--line);background:var(--bg);padding:6px 8px;font:500 12.5px/1.2 var(--sans)}
+.pnode.q .bx{border-style:dashed}
+.parr{flex:0 0 26px;position:relative}
+.parr::before{content:"";position:absolute;left:3px;right:6px;top:47px;border-top:1.5px solid var(--line)}
+.parr::after{content:"";position:absolute;right:1px;top:43px;border:4px solid transparent;border-left:6px solid var(--line)}
+.cross{margin-top:8px;display:flex;flex-direction:column;gap:5px}
+.cross div{border:1.5px dashed var(--red);background:var(--redSoft);text-align:center;font:500 11.5px/1 var(--mono);padding:7px;color:var(--ink);transition:opacity .3s}
+.cross.off div{opacity:.25;border-color:var(--rule);background:transparent}
+
+/* ch5 layers */
+.layers{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr) minmax(0,1fr);gap:10px;align-items:center}
+.lcolh{font:500 10px/1 var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:center;margin-bottom:4px}
+.lbox{border:1px dotted var(--line);padding:9px;text-align:center;font:400 12.5px/1.3 var(--sans);background:var(--bg);transition:all .2s;min-height:44px;display:flex;align-items:center;justify-content:center}
+.lbox.sa{border-style:dashed}
+.lbtn{border:1.5px solid var(--line);padding:11px;text-align:center;font:600 13.5px/1.3 var(--sans);background:var(--bg);color:var(--ink);cursor:pointer;min-height:44px;width:100%}
+.lbtn[aria-pressed="true"]{border-color:var(--red);color:var(--red)}
+.lbox.on{border-color:var(--red);border-style:solid;color:var(--red)}
+.lcol{display:flex;flex-direction:column-reverse;gap:10px}
+.ltext{margin-top:12px;font-size:15px;min-height:72px}
+
+/* scope, cite */
+.scope{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.scope > div{border:1px solid var(--rule);padding:16px 18px}
+.scope h3{margin-top:0}
+.scope ul{margin:0;padding-left:18px}
+.scope li{margin-bottom:8px;font-size:15.5px}
+pre{background:var(--paper);border:1px solid var(--rule);padding:14px;overflow-x:auto;font:400 12px/1.55 var(--mono);color:var(--ink)}
+.copy{font:500 11px/1 var(--mono);padding:8px 10px;border:1px solid var(--line);background:var(--bg);color:var(--cyan);cursor:pointer}
+footer{border-top:1px solid var(--rule);margin-top:40px;padding:22px 0 80px;font-size:14px;color:var(--ink2)}
+
+@media (max-width:980px){
+  .board{grid-template-columns:1fr 1fr}
+  .board .p3{grid-column:1 / -1}
+  .cards{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .mechs{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:860px){
+  .layout{grid-template-columns:1fr;gap:0}
+  .rail{display:none}
+  .topbar{display:flex;position:sticky;top:0;z-index:30;gap:4px;overflow-x:auto;background:var(--bg);border-bottom:1px solid var(--rule);padding:8px 16px;margin:0 -16px;scrollbar-width:none}
+  .topbar a{flex:0 0 auto;font:500 11px/1 var(--mono);color:var(--ink2);text-decoration:none;padding:8px 9px;border:1px solid transparent}
+  .topbar a.on{color:var(--red);border-color:var(--red)}
+}
+@media (max-width:640px){
+  body{font-size:16px}
+  .wrap{padding:0 16px}
+  header.top{padding:36px 0 22px}
+  .board{grid-template-columns:1fr}
+  .cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .measure,.scope,.props,.pgrid{grid-template-columns:1fr}
+  .surface{grid-template-columns:1fr}
+  .surface svg{max-width:220px;margin:0 auto}
+  .layers{grid-template-columns:1fr 1.2fr 1fr;gap:6px}
+  .lbox,.lbtn{font-size:11.5px;padding:7px 5px}
+  .tabs button{padding:10px 10px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+<button id="themeTg" type="button" aria-label="Toggle light and dark theme" title="Toggle theme"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.5a6.5 6.5 0 0 1 0 13z" fill="currentColor"/></svg><span id="themeLbl">Theme</span></button>
+
+<div class="wrap">
+<header class="top">
+  <p class="kicker">SAGAI Workshop at IEEE ICSA 2026 · Position paper</p>
+  <h1>Architecture Without Architects</h1>
+  <p class="sub">How AI coding agents shape software architecture</p>
+  <p class="standfirst">Coding agents are usually treated as fast typists, yet they also pick the framework, the store and the integration of the systems they build. When those systems call a language model themselves, the wording of the prompt decides which infrastructure has to exist.</p>
+  <p class="byline"><b>Phongsakon Mark Konrad</b>, <b>Tim Lukas Adam</b>, <b>Riccardo Terrenzi</b>, <b>Serkan Ayvaz</b></p>
+  <p class="meta">Centre for Industrial Software, University of Southern Denmark · April 2026</p>
+  <p class="links"><a href="https://arxiv.org/abs/2604.04990" rel="external noopener">arXiv ↗</a><span class="sep">·</span><a href="https://arxiv.org/pdf/2604.04990" rel="external noopener">PDF</a><span class="sep">·</span><a href="index.md">Markdown</a><span class="sep">·</span><a href="https://github.com/phomarkon/vibe-architecting-case-study" rel="external noopener">Code ↗</a><span class="sep">·</span><a href="#cite">Cite this article</a></p>
+</header>
+</div>
+
+<section class="dark-band hero" aria-label="Interactive drawing of the three generated systems">
+<div class="wrap">
+  <div class="hero-head">
+    <span class="hero-title">Drawing 01 · One task, three prompts</span>
+    <span class="hero-hint">Pick a prompt and watch the drawing change. Point at a marked phrase to see what it built.</span>
+  </div>
+  <div class="tabs" role="group" aria-label="Prompt variant">
+    <button type="button" data-v="0" aria-pressed="true">A · FAQ</button>
+    <button type="button" data-v="1" aria-pressed="false">B · Structured JSON</button>
+    <button type="button" data-v="2" aria-pressed="false">C · Tool access</button>
+  </div>
+  <div class="board">
+    <div class="panel p1"><span class="tag">Prompt given to the agent</span>
+      <div class="prompt-q" id="hPrompt"></div>
+      <div class="extra" id="hExtra"></div>
+    </div>
+    <div class="panel p2"><span class="tag">What the agent built</span>
+      <div class="stack" id="hStack" aria-live="polite"></div>
+      <div class="dropped" id="hDropped"></div>
+    </div>
+    <div class="panel p3"><span class="tag">Title block</span>
+      <table class="tb" id="hTable"></table>
+      <div class="dims" id="hDims"></div>
+      <div class="dimcap">Lines of code, measured for each variant</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<div class="wrap">
+<nav class="cards" id="chapterCards" aria-label="Chapters"></nav>
+
+<div class="layout">
+<nav class="rail" aria-label="Contents">
+  <div class="h">Contents</div>
+  <a href="#tldr">TL;DR</a>
+  <a href="#abstract">Abstract</a>
+  <a href="#defs">Definitions</a>
+  <a href="#c1">1 · The prompt is the spec</a>
+  <a href="#c2">2 · Five mechanisms</a>
+  <a href="#c3">3 · Six couplings</a>
+  <a href="#c4">4 · Patterns compose</a>
+  <a href="#c5">5 · Three layers</a>
+  <a href="#scope">Scope</a>
+  <a href="#cite">Cite</a>
+</nav>
+<main>
+<nav class="topbar" aria-label="Sections">
+  <a href="#tldr">TL;DR</a><a href="#c1">1</a><a href="#c2">2</a><a href="#c3">3</a><a href="#c4">4</a><a href="#c5">5</a><a href="#scope">Scope</a><a href="#cite">Cite</a>
+</nav>
+
+<section class="blk" id="tldr">
+  <div class="label">TL;DR</div>
+  <div class="tldr"><ul>
+    <li>We gave one coding agent the same chatbot task three times and changed only the prompt. The systems it built grew from 141 lines in 2 files to 472 lines in 4 files to 827 lines in 6 files.</li>
+    <li>Asking for structured output brought in three components that the plain version lacks, a Zod schema, a retry handler and a fallback. Declaring three tools brought in a tool registry, an agent loop and an SQLite state store.</li>
+    <li>A survey of six coding tools yields five mechanisms through which agents make architectural decisions that nobody records.</li>
+    <li>We propose six patterns that map a prompt feature to the infrastructure it requires. Four of them are contingent and may fade as models improve. Two are fundamental and stay.</li>
+    <li>The case study is an illustration. Each prompt ran once, with one agent and one runtime model.</li>
+  </ul></div>
+</section>
+
+<section class="blk abstract" id="abstract">
+  <div class="label">Abstract</div>
+  <p><b>First</b>AI coding agents select frameworks, scaffold infrastructure and wire integrations within seconds. Those are architectural decisions, and almost no one reviews them as such. We identify five mechanisms by which agents make these choices implicitly, drawn from a survey of six tools.</p>
+  <p><b>Second</b>We propose six prompt to architecture coupling patterns in three categories. Each one maps a feature of a natural language prompt to the infrastructure it requires. Four are contingent, like structured output validation, and may weaken as models gain native capabilities. Two are fundamental, like tool call orchestration, and persist whatever the model can do.</p>
+  <p><b>Finally</b>A small demonstration shows that prompt wording alone yields structurally different systems for the same task, from 141 to 827 lines of code and from two to six files. We call the phenomenon vibe architecting and sketch review practices, decision records and tooling that would bring these hidden decisions under governance.</p>
+  <p class="worst"><b style="font:500 11px/1 var(--mono);letter-spacing:.06em;color:var(--red);text-transform:uppercase">Worst case</b><br>The claim would fail if changing the prompt left the generated structure unchanged. The demonstration tested exactly that and found three different component sets. It did so once per prompt, with one agent, one runtime model and prompts that themselves name architectural features. A replication across agents and models, and a run with minimally prescriptive prompts, have not been done.</p>
+</section>
+
+<section class="blk" id="defs">
+  <div class="label">Definitions</div>
+  <dl class="defs">
+    <dt><svg viewBox="0 0 40 26" aria-hidden="true"><path d="M4 18c5-10 9 6 14-4s9 6 18-6" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></dt>
+    <dd><b>Vibe coding.</b> Building software by describing what you want in plain language and letting a model write the code, in the phrase coined by Karpathy.</dd>
+    <dt><svg viewBox="0 0 40 26" aria-hidden="true"><rect x="3" y="3" width="14" height="8" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="23" y="15" width="14" height="8" fill="none" stroke="var(--red)" stroke-width="1.5"/><path d="M17 7h6v8" fill="none" stroke="currentColor" stroke-width="1.2"/></svg></dt>
+    <dd><b>Vibe architecting.</b> Architecture shaped by natural language prompts instead of by deliberate, recorded design.</dd>
+    <dt><svg viewBox="0 0 40 26" aria-hidden="true"><path d="M3 13h12" stroke="currentColor" stroke-width="1.5" stroke-dasharray="3 2"/><rect x="18" y="6" width="19" height="14" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M12 9l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></dt>
+    <dd><b>Prompt to architecture coupling.</b> A link from a feature of a prompt, such as an output schema or a tool signature, to the components the system then needs.</dd>
+    <dt><svg viewBox="0 0 40 26" aria-hidden="true"><rect x="5" y="5" width="30" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="4 3"/></svg></dt>
+    <dd><b>Contingent coupling.</b> A coupling likely to weaken as models gain native capabilities, for example native JSON output.</dd>
+    <dt><svg viewBox="0 0 40 26" aria-hidden="true"><rect x="5" y="5" width="30" height="16" fill="none" stroke="var(--red)" stroke-width="2"/></svg></dt>
+    <dd><b>Fundamental coupling.</b> A coupling that is logically necessary whatever the model can do. Executing a tool always needs orchestration.</dd>
+    <dt><svg viewBox="0 0 40 26" aria-hidden="true"><path d="M8 3h18l6 6v14H8z" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M12 12h14M12 16h10" stroke="currentColor" stroke-width="1.2"/></svg></dt>
+    <dd><b>Architecture decision record (ADR).</b> A short document that states one architectural decision, its context and its rationale.</dd>
+    <dt><svg viewBox="0 0 40 26" aria-hidden="true"><circle cx="8" cy="13" r="4" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="32" cy="7" r="3" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="32" cy="19" r="3" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M12 12l17-4M12 14l17 4" stroke="currentColor" stroke-width="1.2"/></svg></dt>
+    <dd><b>MCP.</b> The Model Context Protocol, a standard way for agents to discover, invoke and exchange data with tools.</dd>
+  </dl>
+</section>
+
+<section class="blk" id="c1">
+  <span class="chapnum">Chapter 1</span>
+  <h2>The prompt becomes the architecture specification</h2>
+  <p>We asked one coding agent, with default settings, to build a customer service chatbot three times. Each run started from scratch with no shared context. Every variant used GPT-4o-mini at runtime, so the prompt was the only thing that changed. The first prompt names a task and asks to answer questions from a FAQ, the second adds an output contract that asks for JSON with intent, confidence and entities, and the third declares capabilities by listing three tools the chatbot may call.</p>
+  <p>Variant A came out flat, with 141 lines in 2 files. B acquired a Zod schema, a retry handler and a fallback generator and grew to 472 lines in 4 files. The tool version acquired a tool registry, an agent loop of ten iterations and an SQLite state store, reaching 827 lines in 6 files. All three use Express. Their components, dependency graphs and failure modes differ.</p>
+  <p>As the prompt gets more specific, prompting and architecture blur, because a capability declaration is in practice an interface definition and an output schema is in practice a data contract that the rest of the system has to honour. The generated infrastructure follows from the prompt. When agents write prompts for other agents, as in coordinated sub-agent workflows, this coupling runs with no human review at all.</p>
+  <figure>
+    <div class="ex" id="ex1">
+      <div class="seg" role="group" aria-label="Measure">
+        <button type="button" data-m="loc" aria-pressed="true">Lines of code</button>
+        <button type="button" data-m="files" aria-pressed="false">Files</button>
+      </div>
+      <div id="measure"></div>
+      <div class="note" id="mnote"></div>
+    </div>
+    <figcaption><b>Figure 1</b>Size of the three generated systems as reported in the paper. Switch between lines of code and files. The marked bar is the tool access variant.</figcaption>
+  </figure>
+  <p>The prompts were not neutral. The extra instructions for B asked for schema validation with a retry or a fallback, and those for C asked for multi turn history. The hero above shows them under each prompt. The paper names this as a threat to internal validity, since the prompts encode architectural expectations at varying specificity.</p>
+</section>
+
+<section class="blk" id="c2">
+  <span class="chapnum">Chapter 2</span>
+  <h2>Agents decide through five mechanisms, and none leaves a record</h2>
+  <p>The range of what agents decide has widened year by year. Line level autocomplete in 2022 had almost no architectural footprint, while the multi file tools of 2024 edited across files and so drew module boundaries without anyone deciding where they should go. System level agents arrived in 2025 and scaffold whole projects from one prompt. Coordinated agents now split work across sub-agents, which turns decomposition itself into an architectural concern. Standards such as MCP and the AGENTS.md convention have hardened this into a de facto integration architecture.</p>
+  <figure>
+    <div class="ex surface" id="ex2">
+      <svg viewBox="0 0 240 240" role="img" aria-label="Concentric rings showing the widening decision surface of coding agents">
+        <g id="rings"></g>
+      </svg>
+      <div>
+        <div class="yr" id="yr">2022</div>
+        <div class="ydesc" id="ydesc"></div>
+        <div class="yconc" id="yconc"></div>
+        <label class="mono" style="font-size:11px;color:var(--muted)" for="yslider">Drag through the years</label>
+        <input type="range" id="yslider" min="0" max="3" step="1" value="0">
+      </div>
+    </div>
+    <figcaption><b>Figure 2</b>The widening decision surface, as the paper describes it. Each ring adds what agents decide at that stage. The years are the paper's own and the rings are an illustration with no measured size.</figcaption>
+  </figure>
+  <p>From a survey of six tools we identify five mechanisms through which these decisions happen.</p>
+  <div class="mechs" id="mechs"></div>
+  <p style="margin-top:18px">Three properties set agent decisions apart from human ones.</p>
+  <div class="props">
+    <div class="prop"><b>Scale</b>Framework, database, authentication and deployment arrive together in one interaction, as a bundle that cannot be reviewed piece by piece.</div>
+    <div class="prop"><b>Speed</b>Choices that teams deliberate over for days happen within seconds, faster than any review.</div>
+    <div class="prop"><b>Opacity</b>The choices sit in generated code with no decision record, no design document and no rationale.</div>
+  </div>
+</section>
+
+<section class="blk" id="c3">
+  <span class="chapnum">Chapter 3</span>
+  <h2>Six couplings tie prompt features to infrastructure, and two of them will not go away</h2>
+  <p>We traced the abstractions in LangChain, LlamaIndex and provider documentation, following each prompt feature to the infrastructure it requires. Six patterns fall into three groups. Constraint patterns shape the form of the output. Capability patterns declare what the model can do. Context patterns control which information reaches the model.</p>
+  <p>Each pattern is either contingent or fundamental. Structured output needs a parser, a validator, a retry and a fallback today, but native JSON guarantees may shrink that stack. Function calling is different. Typed tool signatures produce a router, an argument validator, an error handler and a response loop, and every added tool widens the attack surface. Tool execution needs orchestration however capable the model becomes. The catalog is not exhaustive.</p>
+  <figure>
+    <div class="ex" id="ex3">
+      <div class="seg" role="group" aria-label="Filter patterns">
+        <button type="button" data-f="all" aria-pressed="true">All six</button>
+        <button type="button" data-f="Contingent" aria-pressed="false">Contingent</button>
+        <button type="button" data-f="Fundamental" aria-pressed="false">Fundamental</button>
+      </div>
+      <div class="pgrid" id="pgrid"></div>
+      <div class="pdetail" id="pdetail" aria-live="polite"></div>
+    </div>
+    <figcaption><b>Figure 3</b>The six coupling patterns of the paper's catalog. Pick one to trace its trigger to the infrastructure it requires. Fundamental patterns are drawn in red. Quality impacts are analytical, not measured.</figcaption>
+  </figure>
+</section>
+
+<section class="blk" id="c4">
+  <span class="chapnum">Chapter 4</span>
+  <h2>Couplings compose in one system</h2>
+  <p>A retrieval chatbot with tool access pulls in retrieval, context reduction, structured output and function calling at once. Each pattern adds its own components to the pipeline. Cross cutting concerns such as authentication, rate limiting and logging then span several patterns and add infrastructure that no single pattern accounts for. Whether those concerns grow additively or faster than that as patterns combine is an open question in the paper.</p>
+  <figure>
+    <div class="ex" id="ex4">
+      <div class="seg" role="group" aria-label="Patterns to compose" id="compBtns"></div>
+      <div class="pipe" id="pipe"></div>
+      <div class="cross" id="cross"><div>Authentication</div><div>Rate limiting</div><div>Logging and monitoring</div></div>
+    </div>
+    <figcaption><b>Figure 4</b>An illustration of the paper's composition figure. Switch patterns on and off to assemble the pipeline. The dashed cross cutting bars light up once two or more patterns share the system.</figcaption>
+  </figure>
+  <p>Composition widens the gap between building and reviewing, since agents scaffold a system in minutes while the team that owns it needs hours or days to audit what was built. Tool use patterns widen the attack surface through indirect prompt injection. MCP standardizes tool integration and with it the attack vectors.</p>
+</section>
+
+<section class="blk" id="c5">
+  <span class="chapnum">Chapter 5</span>
+  <h2>Governance can borrow three layers from software architecture</h2>
+  <p>Agents make architectural decisions, but no feedback loop ties those decisions to established architectural knowledge. We sketch a framework with three layers, each matching a mechanism that tools already have to a concept the field already uses.</p>
+  <figure>
+    <div class="ex" id="ex5">
+      <div class="layers">
+        <div><div class="lcolh">Tool mechanisms</div><div class="lcol" id="lTools"></div></div>
+        <div><div class="lcolh">Proposed layers</div><div class="lcol" id="lLayers"></div></div>
+        <div><div class="lcolh">Architecture concepts</div><div class="lcol" id="lSA"></div></div>
+      </div>
+      <div class="ltext" id="ltext" aria-live="polite"></div>
+    </div>
+    <figcaption><b>Figure 5</b>The three layer framework from the paper. Pick a layer to see the tool mechanism it builds on and the architecture concept it formalizes.</figcaption>
+  </figure>
+  <p>Prompt specifications are architectural documents and belong in architectural review. An impact statement written before generation, such as the paper's example “Structured JSON output adds validator, retry handler, fallback; +330 LoC, two new failure modes”, would make the coupling explicit. The 5.9× growth in code and the threefold growth in files across the case study suggest that complexity thresholds could trigger a review when exceeded.</p>
+</section>
+
+<section class="blk" id="scope">
+  <div class="label">Scope</div>
+  <div class="scope">
+    <div><h3>It shows</h3><ul>
+      <li>That one agent, given three wordings of one task, built three structurally different systems.</li>
+      <li>Five mechanisms of implicit architectural decision, supported by a survey of six tools.</li>
+      <li>A catalog of six coupling patterns, each classed as contingent or fundamental.</li>
+    </ul></div>
+    <div><h3>It does not show</h3><ul>
+      <li>That the divergence generalizes. Each prompt ran once, with one tool and one runtime model.</li>
+      <li>What an agent decides unprompted. The prompts encode architectural expectations at varying specificity.</li>
+      <li>Empirical validation of the six patterns or of their quality impacts, which are analytical constructs offered for discussion.</li>
+    </ul></div>
+  </div>
+  <h3>Next steps</h3>
+  <p>The paper names five directions. Replicate across agents to see whether agent choice is itself an architectural decision. Build footprint metrics richer than lines and files. Build tools that preview architectural impact before generation. Extract decision records from agent reasoning traces. Study how patterns compose.</p>
+</section>
+
+<section class="blk" id="cite">
+  <div class="label">Cite this article</div>
+  <p>Konrad, P. M., Adam, T. L., Terrenzi, R., and Ayvaz, S. Architecture Without Architects. How AI Coding Agents Shape Software Architecture. SAGAI Workshop at IEEE ICSA 2026.</p>
+  <pre id="bib">@inproceedings{konrad2026architecture,
+  title     = {Architecture Without Architects: How AI Coding Agents Shape Software Architecture},
+  author    = {Konrad, Phongsakon Mark and Adam, Tim Lukas and Terrenzi, Riccardo and Ayvaz, Serkan},
+  booktitle = {SAGAI Workshop, IEEE International Conference on Software Architecture (ICSA)},
+  year      = {2026},
+  eprint    = {2604.04990},
+  archivePrefix = {arXiv}
+}</pre>
+  <button class="copy" type="button" id="copyBib">Copy BibTeX</button>
+</section>
+</main>
+</div>
+
+<footer>
+  <div>Every value on this page comes from the paper or from the generated systems in its companion repository. Diagrams marked as illustrations carry no measured values.</div>
+  <div style="margin-top:6px">A project of the <a href="https://aiml-sdu.github.io" rel="external noopener">Applied and Interpretable Machine Learning Research Group</a> at the University of Southern Denmark.</div>
+</footer>
+</div>
+
+<script type="application/json" id="data">
+{"variants":[
+ {"id":"A","name":"FAQ","prompt":"Build a Node.js/Express customer service chatbot that answers product questions using a FAQ list. Keep it simple. Use OpenAI GPT-4o-mini as the LLM.",
+  "marks":[["using a FAQ list",["FAQ Loader"]]],
+  "extra":["Use a FAQ list (JSON or similar) as the knowledge source","Keep the architecture as simple as possible"],
+  "components":["Express Server","FAQ Loader","Chat Handler","LLM API Call"],
+  "framework":"Express","store":"JSON","integration":"API call","loc":141,"files":2},
+ {"id":"B","name":"Structured JSON","prompt":"Build a Node.js/Express customer service chatbot that analyzes customer messages and returns structured JSON with intent, confidence, entities, and a response. Use schema validation for the LLM output. Use OpenAI GPT-4o-mini as the LLM.",
+  "marks":[["returns structured JSON with intent, confidence, entities, and a response",["JSON Mode Call","Zod Schema"]],["Use schema validation for the LLM output",["Zod Schema","Retry Handler","Fallback Generator"]]],
+  "extra":["Validate the LLM output against a schema (e.g., using Zod, Joi, or JSON Schema)","Handle validation failures gracefully (retry or fallback)"],
+  "components":["Express Server","Zod Schema","JSON Mode Call","Retry Handler","Fallback Generator"],
+  "framework":"Express","store":"none","integration":"JSON mode","loc":472,"files":4},
+ {"id":"C","name":"Tool access","prompt":"Build a Node.js/Express customer service chatbot that acts as an agent with tool access: search_kb() for knowledge base search, get_account() for customer account lookup, and escalate_to_human() for escalation. The agent should decide which tools to call based on the conversation. Use OpenAI GPT-4o-mini as the LLM.",
+  "marks":[["acts as an agent with tool access: search_kb() for knowledge base search, get_account() for customer account lookup, and escalate_to_human() for escalation",["Tool Registry","Function Calling","SQLite State Store"]],["The agent should decide which tools to call based on the conversation",["Agent Loop"]]],
+  "extra":["Implement three tools: search_kb(), get_account(), escalate_to_human()","The agent should autonomously decide which tools to use","Support multi-turn conversations with conversation history","The agent may call multiple tools in sequence before responding"],
+  "components":["Express Server","Tool Registry","Agent Loop","Function Calling","SQLite State Store"],
+  "framework":"Express","store":"SQLite","integration":"Function calling","loc":827,"files":6}
+]}
+</script>
+<script type="application/json" id="patterns">
+[
+ {"id":"1A","name":"Structured Output","cat":"Constraint","trigger":"JSON schema","infra":["Parser","Validator","Retry","Fallback"],"quality":"Interoperability, robustness","type":"Contingent"},
+ {"id":"1B","name":"Few-Shot","cat":"Constraint","trigger":"Dynamic examples","infra":["Embedding","Vector store","Curator"],"quality":"Capability, grounding","type":"Contingent"},
+ {"id":"2A","name":"Function Calling","cat":"Capability","trigger":"Tool signatures","infra":["Router","Validator","Error handler","Agent loop"],"quality":"Extensibility, attack surface","type":"Fundamental"},
+ {"id":"2B","name":"ReAct Reasoning","cat":"Capability","trigger":"CoT with tools","infra":["State machine","Validator","Timeout handler"],"quality":"Autonomy, testability","type":"Fundamental"},
+ {"id":"3A","name":"RAG","cat":"Context","trigger":"Bounded context","infra":["Ingest","Chunk","Embed","Vector store","Ranker"],"quality":"Accuracy, infrastructure cost","type":"Contingent"},
+ {"id":"3B","name":"Context Reduction","cat":"Context","trigger":"Token budget","infra":["Summarizer","Filter","Extractor"],"quality":"Cost, information loss","type":"Contingent"}
+]
+</script>
+
+<script>
+(function(){
+var D=JSON.parse(document.getElementById('data').textContent);
+var P=JSON.parse(document.getElementById('patterns').textContent);
+var reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+function el(t,c,h){var e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e;}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+
+/* theme */
+var root=document.documentElement,tg=document.getElementById('themeTg'),tl=document.getElementById('themeLbl');
+function curDark(){var a=root.getAttribute('data-theme');if(a)return a==='dark';return matchMedia('(prefers-color-scheme: dark)').matches;}
+function lbl(){tl.textContent=curDark()?'Dark':'Light';}
+tg.addEventListener('click',function(){var n=curDark()?'light':'dark';root.setAttribute('data-theme',n);try{localStorage.setItem('page-theme',n);}catch(e){}lbl();});
+try{matchMedia('(prefers-color-scheme: dark)').addEventListener('change',lbl);}catch(e){}
+lbl();
+
+/* hero */
+var cur=0,prevComps=null;
+var hP=document.getElementById('hPrompt'),hX=document.getElementById('hExtra'),hS=document.getElementById('hStack'),hD=document.getElementById('hDropped'),hT=document.getElementById('hTable'),hDims=document.getElementById('hDims');
+var maxLoc=Math.max.apply(null,D.variants.map(function(v){return v.loc;}));
+function renderHero(i){
+  var v=D.variants[i],prev=i>0?D.variants[i-1]:null;
+  var txt=esc(v.prompt);
+  v.marks.forEach(function(m,k){txt=txt.replace(esc(m[0]),'<mark tabindex="0" data-k="'+k+'">'+esc(m[0])+'</mark>');});
+  hP.innerHTML='“'+txt+'”';
+  hX.innerHTML='<div class="h">Extra instructions for this variant</div>'+v.extra.map(function(s){return '· '+esc(s);}).join('<br>');
+  hS.innerHTML='';
+  v.components.forEach(function(c,j){
+    var isNew=prev&&prev.components.indexOf(c)<0;
+    var d=el('div','comp'+(isNew?' new':''),'<span>'+esc(c)+'</span><span class="st">'+(i===0?'base':(isNew?'+ added':'kept'))+'</span>');
+    d.setAttribute('data-c',c);
+    if(!reduce){d.classList.add('enter');setTimeout(function(){d.classList.remove('enter');},40+j*70);}
+    hS.appendChild(d);
+  });
+  if(prev){var gone=prev.components.filter(function(c){return v.components.indexOf(c)<0;});
+    hD.innerHTML=gone.length?'Not in this drawing, present in '+prev.id+'. '+gone.map(function(g){return '<s>'+esc(g)+'</s>';}).join(''):'';}
+  else hD.innerHTML='Red marks components added relative to the previous prompt.';
+  hT.innerHTML='<tr><th>Variant</th><td>'+v.id+' · '+esc(v.name)+'</td></tr><tr><th>Framework</th><td>'+v.framework+'</td></tr><tr><th>Store</th><td>'+v.store+'</td></tr><tr><th>Integration</th><td>'+v.integration+'</td></tr><tr><th>Lines of code</th><td>'+v.loc+'</td></tr><tr><th>Files</th><td>'+v.files+'</td></tr><tr><th>Runtime model</th><td>GPT-4o-mini</td></tr>';
+  hDims.innerHTML='';
+  D.variants.forEach(function(w,k){
+    var r=el('div','dim'+(k===i?' cur':''),'<span>'+w.id+'</span><span class="bar"><i style="width:'+(100*w.loc/maxLoc)+'%"></i></span><span>'+w.loc+' LoC</span>');
+    r.addEventListener('click',function(){setV(k);});
+    hDims.appendChild(r);
+  });
+  hP.querySelectorAll('mark').forEach(function(m){
+    var cs=v.marks[+m.getAttribute('data-k')][1];
+    function on(){m.classList.add('on');hS.querySelectorAll('.comp').forEach(function(c){if(cs.indexOf(c.getAttribute('data-c'))>=0)c.classList.add('hl');});}
+    function off(){m.classList.remove('on');hS.querySelectorAll('.comp').forEach(function(c){c.classList.remove('hl');});}
+    m.addEventListener('mouseenter',on);m.addEventListener('mouseleave',off);m.addEventListener('focus',on);m.addEventListener('blur',off);
+    m.addEventListener('click',function(){m.classList.contains('on')?off():on();});
+  });
+}
+var tabs=document.querySelectorAll('.tabs button');
+function setV(i){cur=i;tabs.forEach(function(b){b.setAttribute('aria-pressed',+b.getAttribute('data-v')===i?'true':'false');});renderHero(i);}
+tabs.forEach(function(b){b.addEventListener('click',function(){setV(+b.getAttribute('data-v'));});});
+renderHero(0);
+
+/* ch1 measure */
+var meas=document.getElementById('measure'),mnote=document.getElementById('mnote'),mode='loc';
+function renderM(){
+  var key=mode,mx=Math.max.apply(null,D.variants.map(function(v){return v[key];}));
+  meas.innerHTML='';
+  var col=el('div','mcol');col.appendChild(el('div','mh',key==='loc'?'Lines of code':'Files'));
+  D.variants.forEach(function(v){var r=el('div','mrow'+(v.id==='C'?' c':''),'<span>'+v.id+'</span><span><div class="b" style="width:'+(100*v[key]/mx)+'%"></div></span><span>'+v[key]+'</span>');col.appendChild(r);});
+  meas.appendChild(col);
+  mnote.textContent=key==='loc'?'From A to C the code grew 5.9× (141 to 827 lines).':'From A to C the file count grew threefold (2 to 6 files).';
+}
+document.querySelectorAll('#ex1 .seg button').forEach(function(b){b.addEventListener('click',function(){mode=b.getAttribute('data-m');document.querySelectorAll('#ex1 .seg button').forEach(function(x){x.setAttribute('aria-pressed',x===b?'true':'false');});renderM();});});
+renderM();
+
+/* ch2 rings */
+var Y=[
+ {y:'2022',d:'Line level autocomplete, with almost no architectural footprint.',c:['single lines']},
+ {y:'2024',d:'Multi file tools edit across files and so draw module boundaries indirectly.',c:['single lines','module boundaries']},
+ {y:'2025',d:'System level agents scaffold entire projects from a single prompt.',c:['single lines','module boundaries','framework, database, authentication, deployment']},
+ {y:'2026',d:'Coordinated agents split work across sub-agents, and MCP and AGENTS.md standardize integration. The decision surface covers the full breadth of software architecture.',c:['single lines','module boundaries','framework, database, authentication, deployment','decomposition and integration protocol']}
+];
+var rings=document.getElementById('rings'),ys=document.getElementById('yslider');
+var R=[24,52,80,108],RL=['lines','modules','stack','decomposition'];
+var ns='http://www.w3.org/2000/svg';
+R.forEach(function(r,k){var c=document.createElementNS(ns,'circle');c.setAttribute('cx',120);c.setAttribute('cy',120);c.setAttribute('r',r);c.setAttribute('class','ring');c.id='ring'+k;rings.appendChild(c);
+  var t=document.createElementNS(ns,'text');t.setAttribute('x',120);t.setAttribute('y',120-r+12);t.setAttribute('text-anchor','middle');t.setAttribute('class','rtext');t.id='rt'+k;t.textContent=RL[k];rings.appendChild(t);});
+function renderY(i){
+  document.getElementById('yr').textContent=Y[i].y;
+  document.getElementById('ydesc').textContent=Y[i].d;
+  document.getElementById('yconc').innerHTML='Decided by the agent<br>'+Y[i].c.map(function(s){return '· '+s;}).join('<br>');
+  R.forEach(function(_,k){var c=document.getElementById('ring'+k);c.setAttribute('class','ring'+(k>i?' off':'')+(k===i?' cur':''));document.getElementById('rt'+k).style.opacity=k>i?.3:1;});
+}
+ys.addEventListener('input',function(){renderY(+ys.value);});
+renderY(0);
+var M=[
+ ['Model selection','Different models write structurally different code, so switching the model selector is an architectural choice.'],
+ ['Task decomposition','How an agent splits work decides module boundaries, so the agent designs the modular structure.'],
+ ['Default configuration','Guardrails exist, but the developer has to set them up. Without rules, agents fall back on training data priors.'],
+ ['Scaffolding','Templates and autonomous agents fold framework, database, authentication and deployment into one interaction.'],
+ ['Integration protocols','Whether a tool uses MCP or hard codes service access, the tool chooses the integration architecture.']
+];
+var mechs=document.getElementById('mechs');
+M.forEach(function(m,k){mechs.appendChild(el('div','mech','<span class="k">M'+(k+1)+'</span><span class="t">'+m[0]+'</span>'+m[1]));});
+
+/* ch3 patterns */
+var pg=document.getElementById('pgrid'),pd=document.getElementById('pdetail'),filt='all',sel='1A';
+var cats=['Constraint','Capability','Context'];
+function renderP(){
+  pg.innerHTML='';
+  cats.forEach(function(c){var col=el('div');col.appendChild(el('div','pcat',c+' patterns'));
+    P.filter(function(p){return p.cat===c;}).forEach(function(p){
+      var b=el('button','pcard'+(p.type==='Fundamental'?' fund':'')+((filt!=='all'&&p.type!==filt)?' dim0':''),'<span class="id">'+p.id+'</span><span class="nm">'+esc(p.name)+'</span><span class="ty">'+p.type+'</span>');
+      b.type='button';b.setAttribute('aria-pressed',p.id===sel?'true':'false');
+      b.addEventListener('click',function(){sel=p.id;renderP();});
+      col.appendChild(b);});
+    pg.appendChild(col);});
+  var p=P.filter(function(q){return q.id===sel;})[0];
+  pd.innerHTML='<div class="mono" style="font-size:11px;color:var(--muted)">'+p.id+' · '+esc(p.name)+' · '+p.type+'</div>'+
+   '<div class="chain'+(p.type==='Fundamental'?' fund-c':'')+'"><span class="trig">'+esc(p.trigger)+'</span><i>→</i>'+p.infra.map(function(x){return '<span>'+esc(x)+'</span>';}).join('')+'</div>'+
+   '<div class="pmeta">Quality impact · '+esc(p.quality)+'</div>';
+}
+document.querySelectorAll('#ex3 .seg button').forEach(function(b){b.addEventListener('click',function(){filt=b.getAttribute('data-f');document.querySelectorAll('#ex3 .seg button').forEach(function(x){x.setAttribute('aria-pressed',x===b?'true':'false');});
+  var p=P.filter(function(q){return q.id===sel;})[0];if(filt!=='all'&&p.type!==filt){sel=P.filter(function(q){return q.type===filt;})[0].id;}renderP();});});
+renderP();
+
+/* ch4 composition */
+var CP=[
+ {id:'3A',h:'3A · RAG pipeline',b:['Chunking','Embedding','Ranking']},
+ {id:'3B',h:'3B · Context reduction',b:['Summarization']},
+ {id:'1A',h:'1A · Structured output',b:['LLM + Schema','Validator','Retry / Fallback']},
+ {id:'2A',h:'2A · Function calling',b:['Tool Router','Tool Executor','State Store']}
+];
+var on={'3A':true,'3B':true,'1A':true,'2A':true};
+var cb=document.getElementById('compBtns'),pipe=document.getElementById('pipe'),cross=document.getElementById('cross');
+CP.forEach(function(c){var b=el('button','chip red',c.id);b.type='button';b.setAttribute('aria-pressed','true');b.setAttribute('aria-label','Toggle pattern '+c.h);
+  b.addEventListener('click',function(){on[c.id]=!on[c.id];b.setAttribute('aria-pressed',on[c.id]?'true':'false');renderC();});cb.appendChild(b);});
+function renderC(){
+  pipe.innerHTML='';
+  var q=el('div','pnode q','<div class="ph">Input</div><div class="bx">User query</div>');pipe.appendChild(q);
+  var n=0;
+  CP.forEach(function(c){if(!on[c.id])return;n++;pipe.appendChild(el('div','parr'));
+    var d=el('div','pnode','<div class="ph">'+c.h+'</div>'+c.b.map(function(x){return '<div class="bx">'+esc(x)+'</div>';}).join(''));pipe.appendChild(d);});
+  if(!n){pipe.appendChild(el('div','parr'));pipe.appendChild(el('div','pnode','<div class="ph">Plain call</div><div class="bx">LLM</div>'));}
+  cross.className='cross'+(n>=2?'':' off');
+}
+renderC();
+
+/* ch5 layers */
+var L=[
+ {n:'Layer 1 · Constraints',t:'Instruction files, MCP',s:'ADLs, ADD',d:'Specifies what the agent may and may not do. Instruction files such as AGENTS.md and MCP server configurations already play this role informally. Architecture description languages and attribute driven design formalize the same concern.'},
+ {n:'Layer 2 · Conformance',t:'Plan and build, hooks',s:'Fitness functions',d:'Checks generated code against the constraints. A conformance layer could compare the dependency graph of generated code with declared constraints, such as no new database dependency without review, and flag violations before they spread.'},
+ {n:'Layer 3 · Knowledge',t:'Repository maps',s:'ADRs, AKM',d:'Feeds architectural context back to the agent. It could extract decisions from agent reasoning traces and keep them as decision records, closing the gap between generation speed and review capacity.'}
+];
+var lT=document.getElementById('lTools'),lL=document.getElementById('lLayers'),lS=document.getElementById('lSA'),lt=document.getElementById('ltext'),lsel=0;
+function renderL(){
+  lT.innerHTML='';lL.innerHTML='';lS.innerHTML='';
+  L.forEach(function(x,k){
+    lT.appendChild(el('div','lbox'+(k===lsel?' on':''),esc(x.t)));
+    var b=el('button','lbtn',esc(x.n));b.type='button';b.setAttribute('aria-pressed',k===lsel?'true':'false');b.addEventListener('click',function(){lsel=k;renderL();});lL.appendChild(b);
+    lS.appendChild(el('div','lbox sa'+(k===lsel?' on':''),esc(x.s)));
+  });
+  lt.textContent=L[lsel].d;
+}
+renderL();
+
+/* chapter cards with live thumbnails */
+var cardsEl=document.getElementById('chapterCards');
+var CH=[['c1','The prompt is the spec'],['c2','Five mechanisms'],['c3','Six couplings'],['c4','Patterns compose'],['c5','Three layers']];
+function thumb(k){
+  var s='<svg viewBox="0 0 120 60" aria-hidden="true">';
+  if(k===0){D.variants.forEach(function(v,i){var w=100*v.loc/maxLoc;s+='<rect x="8" y="'+(10+i*15)+'" width="'+w+'" height="9" fill="none" stroke="'+(i===2?'var(--red)':'var(--line)')+'" stroke-width="1.4"/>';});}
+  if(k===1){[8,16,24].forEach(function(r){s+='<circle cx="60" cy="30" r="'+r+'" fill="none" stroke="var(--line)" stroke-width="1.3"/>';});s+='<circle cx="60" cy="30" r="27" fill="none" stroke="var(--red)" stroke-width="1.6"/>';}
+  if(k===2){P.forEach(function(p,i){var x=10+(i>>1)*36,y=8+(i%2)*24;s+='<rect x="'+x+'" y="'+y+'" width="30" height="18" fill="none" stroke="'+(p.type==='Fundamental'?'var(--red)':'var(--line)')+'" stroke-width="1.4"/>';});}
+  if(k===3){[0,1,2,3].forEach(function(i){s+='<rect x="'+(6+i*29)+'" y="8" width="22" height="14" fill="none" stroke="var(--line)" stroke-width="1.3"/>';if(i)s+='<path d="M'+(i*29)+' 15h6" stroke="var(--line)"/>';});[0,1,2].forEach(function(i){s+='<rect x="6" y="'+(30+i*9)+'" width="108" height="6" fill="none" stroke="var(--red)" stroke-dasharray="3 2"/>';});}
+  if(k===4){[0,1,2].forEach(function(i){s+='<rect x="42" y="'+(42-i*17)+'" width="36" height="12" fill="none" stroke="'+(i===2?'var(--red)':'var(--line)')+'" stroke-width="1.4"/><rect x="6" y="'+(44-i*17)+'" width="24" height="8" fill="none" stroke="var(--line)" stroke-dasharray="1 2"/><rect x="90" y="'+(44-i*17)+'" width="24" height="8" fill="none" stroke="var(--line)" stroke-dasharray="3 2"/>';});}
+  return s+'</svg>';
+}
+CH.forEach(function(c,k){var a=el('a','card',thumb(k)+'<div class="n">'+String(k+1).padStart(2,'0')+'</div><div class="t">'+c[1]+'</div>');a.href='#'+c[0];cardsEl.appendChild(a);});
+
+/* scroll spy */
+var links=[].slice.call(document.querySelectorAll('.rail a,.topbar a'));
+var ids=['tldr','abstract','defs','c1','c2','c3','c4','c5','scope','cite'];
+function spy(){var y=window.scrollY+120,curId=null;ids.forEach(function(id){var e=document.getElementById(id);if(e&&e.offsetTop<=y)curId=id;});
+  links.forEach(function(a){var on=a.getAttribute('href')==='#'+curId;a.classList.toggle('on',on);if(on&&a.parentNode.classList.contains('topbar')){var p=a.parentNode;var l=a.offsetLeft-p.clientWidth/2+a.clientWidth/2;p.scrollLeft=l;}});}
+window.addEventListener('scroll',spy,{passive:true});spy();
+
+document.getElementById('copyBib').addEventListener('click',function(){var t=document.getElementById('bib').textContent,b=this;
+  (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(function(){b.textContent='Copied';setTimeout(function(){b.textContent='Copy BibTeX';},1500);},function(){b.textContent='Select and copy';});});
+})();
+</script>
+</body>
+</html>
